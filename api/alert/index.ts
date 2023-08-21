@@ -1,8 +1,7 @@
-import EventEmitter from "events";
 import io from "socket.io-client";
 import { Alert, AlertType } from "../building/findAll";
 
-export const socket = io("http://localhost:3000");
+export const socket = io(process.env.NEXT_PUBLIC_API_URL || "");
 socket.connect();
 
 socket.on("connect", () => {
