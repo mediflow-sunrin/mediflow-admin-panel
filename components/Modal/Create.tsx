@@ -180,6 +180,8 @@ export default function Create({ close }: Props) {
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
+                  e.target.value = "";
+                  console.log(file);
                   if (!file) return;
                   const formData = new FormData();
                   formData.append("file", file);

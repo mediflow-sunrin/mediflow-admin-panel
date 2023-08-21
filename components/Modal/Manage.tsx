@@ -14,6 +14,8 @@ import {
 import { useRouter } from "next/router";
 import { findAll } from "@/api/alert/findAll";
 import Link from "next/link";
+import { update } from "@/api/user/update";
+import { update as buildingUpdate } from "@/api/building/update";
 
 type Props = {
   close: () => void;
@@ -30,6 +32,14 @@ type UserProps = {
 };
 
 function User({ building }: UserProps) {
+  const router = useRouter();
+
+  function removeHandler(id: string) {
+    update(id, { building: null });
+
+    router.reload();
+  }
+
   return (
     <>
       <UserWrapper>
@@ -37,7 +47,9 @@ function User({ building }: UserProps) {
           <UserRow key={v.id}>
             <UserName>{v.name}</UserName>
             <Buttons>
-              <ManageButton>삭제</ManageButton>
+              <ManageButton onClick={() => removeHandler(v.id)}>
+                삭제
+              </ManageButton>
             </Buttons>
           </UserRow>
         ))}
@@ -374,12 +386,24 @@ function Building({ building }: BuildingProps) {
   const [address, setAddress] = useState(building.address);
   const [phone, setPhone] = useState(building.contact);
 
+  const router = useRouter();
+
+  function submitHandler() {
+    buildingUpdate(building.id.toString(), {
+      name,
+      address,
+      contact: phone,
+    });
+
+    router.reload();
+  }
+
   return (
     <>
       <BuildingWrapper>
         <BuildingRow>
           <BuildingTitle>건물 수정</BuildingTitle>
-          <Button>
+          <Button onClick={submitHandler}>
             <Image
               style={{
                 filter: "invert(1)",
